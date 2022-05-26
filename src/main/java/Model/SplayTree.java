@@ -20,9 +20,6 @@ public class SplayTree<T extends Comparable<T>> implements Set {
 
     private int size = 0;
 
-//    SplayTree(Node<T> node) {
-//        root = node;
-//    }
 
     SplayTree() {
         root = new Node<>(null, null, null, null);
@@ -204,43 +201,41 @@ public class SplayTree<T extends Comparable<T>> implements Set {
     }
 
     private class SplayTreeIterator implements Iterator<T> {
-        private Node<T> node;
+        private Node<T> next;
 
-        private SplayTreeIterator(Node<T> root) {
-            this.node = root;
+        public SplayTreeIterator(Node<T> root) {
+            if (root == null) return;
+            next = root;
+            while (next.left != null) next = next.left;
         }
 
         @Override
         public boolean hasNext() {
-            return (node != null);
+            return next != null;
         }
 
         @Override
         public T next() {
-            T ret = null;
-            while (hasNext()) {
-                if (node.left == null) {
-                    ret = node.value;
-                    node = node.right;
-                    break;
-                } else {
-                    Node<T> left = node.left;
-                    while (left.right != null && left.right != node) left = left.right;
-
-                    if (left.right == null) {
-                        left.right = node;
-                        node = left.left;
-                    } else {
-                        left.right = null;
-                        ret = node.value;
-                        node = node.right;
-                        break;
-                    }
-                }
+            if (!hasNext()) throw new NoSuchElementException();
+            Node<T> r = next;
+            if (next.right != null) {
+                next = next.right;
+                while (next.left != null) next = next.left;
+                return r.value;
             }
-            return ret;
-        }
 
+            while (true) {
+                if (next.parent == null) {
+                    next = null;
+                    return r.value;
+                }
+                if (next.parent.left == next) {
+                    next = next.parent;
+                    return r.value;
+                }
+                next = next.parent;
+            }
+        }
     }
 
     @Override
@@ -261,7 +256,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         if (a == null) throw new NullPointerException();
         int size = this.size;
         if (a.length < size) {
-           return new Object[size];
+            return new Object[size];
         }
         if (a.length > size) {
             a[size] = null;

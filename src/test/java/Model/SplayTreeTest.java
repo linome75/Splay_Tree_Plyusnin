@@ -2,10 +2,7 @@ package Model;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -71,6 +68,18 @@ class SplayTreeTest {
 
     @Test
     void iterator() {
+        SplayTree<Integer> tree = new SplayTree<>();
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+        tree.addAll(list);
+        Iterator<Integer> it = tree.iterator();
+        int i = 0;
+        Integer[] res = new Integer[tree.size()];
+        while (it.hasNext()){
+            res[i] = it.next();
+            i++;
+        }
+        assertArrayEquals(res, list.toArray());
+        assertTrue(i == tree.size());
     }
 
     @Test

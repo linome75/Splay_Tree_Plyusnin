@@ -155,7 +155,14 @@ class SplayTreeTest {
 
     @Test
     void retainAll() {
-
+        SplayTree<Integer> tree = new SplayTree<>();
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> listToRetain = Arrays.asList(1, 2, 3);
+        Object[] arr = {3, 2, 1};
+        tree.addAll(list);
+        tree.retainAll(listToRetain);
+        assertArrayEquals(arr, tree.toArray());
+        assertFalse(tree.contains(4));
     }
 
     @Test

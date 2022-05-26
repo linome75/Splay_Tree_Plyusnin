@@ -324,7 +324,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
     @Override
     public boolean retainAll(Collection c) {
         int startSize = this.size;
-        for (Object i : c) if (!contains(i)) remove(i);
+        for (Object i : this.toArray()) if (!c.contains(i)) remove(i);
         return startSize != this.size;
     }
 

@@ -1,9 +1,7 @@
 package Model;
 
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class SplayTree<T extends Comparable<T>> implements Set {
     private static class Node<T> {
@@ -22,12 +20,12 @@ public class SplayTree<T extends Comparable<T>> implements Set {
 
     private int size = 0;
 
-    SplayTree(Node<T> node) {
-        root = node;
-    }
+//    SplayTree(Node<T> node) {
+//        root = node;
+//    }
 
     SplayTree() {
-        root = new Node<T>(null, null, null, null);
+        root = new Node<>(null, null, null, null);
     }
 
     private void setParent(Node<T> child, Node<T> parent) {
@@ -88,8 +86,8 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         return splay(node);
     }
 
-    public boolean find(T value) {
-        return find(root, value);
+    private void find(T value) {
+        find(root, value);
     }
 
     private boolean find(Node<T> node, T value) {
@@ -115,10 +113,6 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         return false;
     }
 
-    private Node<T> split(T value) {
-        return split(root, value);
-    }
-
     private Node<T> split(Node<T> node, T value) {
         if (node == null) return null;
         find(node, value);
@@ -127,18 +121,18 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         if (comparison == 0) {
             setParent(node.left, null);
             setParent(node.right, null);
-            return new Node<T>(value, node.left, node.right, null);
+            return new Node<>(value, node.left, node.right, null);
         }
         if (comparison > 0) {
             Node<T> rightNode = node.right;
             setParent(rightNode, null);
             node.right = null;
-            return new Node<T>(value, node, rightNode, null);
+            return new Node<>(value, node, rightNode, null);
         } else {
             Node<T> leftNode = node.left;
             setParent(leftNode, null);
             node.left = null;
-            return new Node<T>(value, node, leftNode, null);
+            return new Node<>(value, node, leftNode, null);
         }
     }
 
@@ -153,20 +147,19 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         return true;
     }
 
-    private Node<T> merge(Node<T> left, Node<T> right) {
+    private void merge(Node<T> left, Node<T> right) {
         if (right == null) {
             root = left;
-            return left;
+            return;
         }
         if (left == null) {
             root = right;
-            return right;
+            return;
         }
         find(right, left.value);
         right = root;
         right.left = left;
         left.parent = right;
-        return right;
     }
 
     public void getTree() {
@@ -248,38 +241,40 @@ public class SplayTree<T extends Comparable<T>> implements Set {
             return ret;
         }
 
-//        @Override
-//        public void remove() {
-//            boolean hasRight = (node.right != null);
-//            if (node.parent != null) {
-//                if (node.parent.left == node) {
-//                    if (hasRight) node.parent.left = node.right;
-//                    else node.parent.left = node.left;
-//                }
-//                else {
-//                    if (hasRight) node.parent.right = node.right;
-//                    else node.parent.right = node.left;
-//                }
-//            }
-//            if (hasRight) {
-//                node.right.parent = node.parent;
-//                node.right.left = node.left;
-//                node.left.parent = node.right;
-//                node.left.right = node.right.left;
-//            }
-//        }
     }
 
     @Override
     public Object[] toArray() {
         Object[] a = new Object[size];
-        int i = 0;
-        while (!isEmpty()) {
-            a[i] = root.value;
-            remove(root.value);
-            i++;
+        deepTraversal(root, a, 0);
+        return a;
+    }
+
+    @Override
+    public Object[] toArray(Object[] a) {
+        a = prepareArray(a);
+        deepTraversal(root, a, 0);
+        return a;
+    }
+
+    final Object[] prepareArray(Object[] a) {
+        if (a == null) throw new NullPointerException();
+        int size = this.size;
+        if (a.length < size) {
+           return new Object[size];
+        }
+        if (a.length > size) {
+            a[size] = null;
         }
         return a;
+    }
+
+    private void deepTraversal(Node<T> node, Object[] a, int i) {
+        if (node == null) return;
+        a[i] = node.value;
+        i++;
+        deepTraversal(node.left, a, i);
+        deepTraversal(node.right, a, i);
     }
 
     @Override
@@ -290,8 +285,10 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         } else return find(root, (T) o);
     }
 
+
     @Override
     public boolean remove(Object o) {
+        if (o == null) throw new NullPointerException();
         T value = (T) o;
         if (!contains(value)) return false;
         find(value);
@@ -310,7 +307,12 @@ public class SplayTree<T extends Comparable<T>> implements Set {
 
     @Override
     public void clear() {
-        while (!isEmpty()) remove(root);
+        while (!isEmpty()) {
+            setParent(root.left, null);
+            setParent(root.right, null);
+            size--;
+            merge(root.left, root.right);
+        }
     }
 
     @Override
@@ -323,8 +325,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
     public boolean retainAll(Collection c) {
         int startSize = this.size;
         for (Object i : c) if (!contains(i)) remove(i);
-        if (startSize != this.size) return true;
-        else return false;
+        return startSize != this.size;
     }
 
     @Override
@@ -336,17 +337,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         return true;
     }
 
-    @Override
-    public Object[] toArray(Object[] a) {
-        if (a.length < size) a = new Object[size];
-        int i = 0;
-        while (i < size) {
-            a[i] = root.value;
-            remove(root.value);
-            i++;
-        }
-        return a;
-    }
+
 }
 
 

@@ -21,7 +21,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
     private int size = 0;
 
 
-    SplayTree() {
+    public SplayTree() {
         root = new Node<>(null, null, null, null);
     }
 
@@ -159,26 +159,26 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         left.parent = right;
     }
 
-    public void getTree() {
-        getTree(root);
-    }
-
-    private void getTree(Node<T> node) {
-        if (node == null) {
-            System.out.println("null");
-            return;
-        }
-        System.out.println(node.value);
-        if (node.left != null) {
-            System.out.println("left[");
-            getTree(node.left);
-        }
-        if (node.right != null) {
-            System.out.println("right[");
-            getTree(node.right);
-        }
-        System.out.println("]");
-    }
+//    public void getTree() {
+//        getTree(root);
+//    }
+//
+//    private void getTree(Node<T> node) {
+//        if (node == null) {
+//            System.out.println("null");
+//            return;
+//        }
+//        System.out.println(node.value);
+//        if (node.left != null) {
+//            System.out.println("left[");
+//            getTree(node.left);
+//        }
+//        if (node.right != null) {
+//            System.out.println("right[");
+//            getTree(node.right);
+//        }
+//        System.out.println("]");
+//    }
 
     @Override
     public int size() {

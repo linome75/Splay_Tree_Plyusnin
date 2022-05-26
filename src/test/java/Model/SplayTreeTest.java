@@ -14,9 +14,6 @@ class SplayTreeTest {
         assertTrue(tree.isEmpty());
     }
 
-    @Test
-    void getTree() {
-    }
 
     @Test
     void size() {

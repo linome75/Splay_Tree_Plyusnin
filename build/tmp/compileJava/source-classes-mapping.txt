@@ -1,3 +1,5 @@
+org/openjfx/Tree.java
+ org.openjfx.Tree
 org/openjfx/MainApp.java
  org.openjfx.MainApp
 Model/SplayTree.java

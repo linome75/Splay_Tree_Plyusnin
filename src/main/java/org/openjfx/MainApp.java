@@ -10,10 +10,8 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        String javaVersion = System.getProperty("java.version");
-        String javafxVersion = System.getProperty("javafx.version");
-        Label l = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-        Scene scene = new Scene(new StackPane(l), 640, 480);
+        Label l = new Label("Splay Tree");
+        Scene scene = new Scene(new StackPane(l), 960, 540);
         stage.setScene(scene);
         stage.show();
     }

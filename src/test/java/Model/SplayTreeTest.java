@@ -71,7 +71,7 @@ class SplayTreeTest {
         Iterator<Integer> it = tree.iterator();
         int i = 0;
         Integer[] res = new Integer[tree.size()];
-        while (it.hasNext()){
+        while (it.hasNext()) {
             res[i] = it.next();
             i++;
         }
@@ -186,4 +186,17 @@ class SplayTreeTest {
         assertFalse(tree.containsAll(listToCheck1));
     }
 
+
+    @Test
+    void testRemove() {
+        SplayTree<Integer> tree = new SplayTree<>();
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+        Object[] arr = {5, 4, 3, 2};
+        tree.addAll(list);
+        Iterator<Integer> it = tree.iterator();
+        int i = tree.size();
+        it.remove();
+        assertTrue(i - 1 == tree.size());
+        assertArrayEquals(arr, tree.toArray());
+    }
 }

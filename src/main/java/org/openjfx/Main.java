@@ -21,11 +21,11 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         BorderPane pane = new BorderPane();
-        SplitPane splitPane = new SplitPane();
+        //SplitPane splitPane = new SplitPane();
         SplayTreePane treePane = new SplayTreePane(tree);
-        SplayTreePane lastTreePane = new SplayTreePane(tree);
-        splitPane.getItems().addAll(lastTreePane, treePane);
-        pane.setCenter(splitPane);
+        //SplayTreePane lastTreePane = new SplayTreePane(tree);
+        //splitPane.getItems().addAll(lastTreePane, treePane);
+        pane.setCenter(treePane);
 
         TextField textField = new TextField();
         textField.setPrefColumnCount(20);
@@ -35,7 +35,7 @@ public class Main extends Application {
         Button cleanBtn = new Button("Clean");
         Button addAllBtn = new Button("Add all");
         Scene scene = new Scene(pane, 960, 540);
-        controls(scene, textField, addBtn, removeBtn, splayBtn, cleanBtn, addAllBtn, tree, treePane, lastTreePane);
+        controls(scene, textField, addBtn, removeBtn, splayBtn, cleanBtn, addAllBtn, tree, treePane);
         FlowPane root = new FlowPane(Orientation.HORIZONTAL, 5, 5, new Label("Enter a value:"), textField, addBtn, removeBtn, splayBtn, cleanBtn, addAllBtn);
         root.setPadding(new Insets(10));
         root.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -48,7 +48,7 @@ public class Main extends Application {
         stage.show();
     }
 
-    public static void controls(Scene scene, TextField textField, Button add, Button remove, Button splay, Button clean, Button addAll, SplayTree tree, SplayTreePane pane, SplayTreePane lastTreePane) {
+    public static void controls(Scene scene, TextField textField, Button add, Button remove, Button splay, Button clean, Button addAll, SplayTree tree, SplayTreePane pane) {
         add.setOnAction(event -> {
             if (textField.getText().length() != 0) {
                 Integer key = tryParse(textField.getText());
@@ -56,8 +56,8 @@ public class Main extends Application {
                 else if (tree.contains(key)) {
                     pane.message = key + " is already in tree";
                 } else {
-                    lastTreePane.message = pane.message;
-                    lastTreePane.displayTree();
+                    //lastTreePane.message = pane.message;
+                    //lastTreePane.displayTree();
                     tree.add(key);
                     pane.message = key + " added";
                 }
@@ -91,8 +91,8 @@ public class Main extends Application {
                     pane.message = key + " isn't in tree";
 
                 } else {
-                    lastTreePane.message = pane.message;
-                    lastTreePane.displayTree();
+                    //lastTreePane.message = pane.message;
+                    //lastTreePane.displayTree();
                     tree.remove(key);
                     pane.message = key + " removed";
 
@@ -107,8 +107,8 @@ public class Main extends Application {
                 Integer key = tryParse(textField.getText());
                 if (key == null) pane.message = "Wrong data";
                 else {
-                    lastTreePane.message = pane.message;
-                    lastTreePane.displayTree();
+                    //lastTreePane.message = pane.message;
+                    //lastTreePane.displayTree();
                     tree.find(key);
                     pane.message = key + " splayed";
                 }
@@ -117,8 +117,8 @@ public class Main extends Application {
             }
         });
         clean.setOnAction(event -> {
-            lastTreePane.message = pane.message;
-            lastTreePane.displayTree();
+            //lastTreePane.message = pane.message;
+            //lastTreePane.displayTree();
             tree.clear();
             pane.message = "Tree was cleared";
             pane.displayTree();
@@ -128,26 +128,26 @@ public class Main extends Application {
             char key = event.getText().toUpperCase().charAt(0);
             switch (key) {
                 case ('D') -> {
-                    lastTreePane.left();
+                    //lastTreePane.left();
                     pane.left();
                 }
                 case ('A') -> {
-                    lastTreePane.right();
+                    //lastTreePane.right();
                     pane.right();
                 }
                 case ('W') -> {
-                    lastTreePane.upper();
+                    //lastTreePane.upper();
                     pane.upper();
                 }
                 case ('S') -> {
-                    lastTreePane.downer();
+                    //lastTreePane.downer();
                     pane.downer();
                 }
                 case ('E') -> {
                     pane.bigger();
                 }
                 case ('Q') -> {
-                    lastTreePane.smaller();
+                    //lastTreePane.smaller();
                     pane.smaller();
                 }
             }

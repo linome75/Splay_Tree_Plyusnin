@@ -17,8 +17,8 @@ public class SplayTreePane extends Pane {
     private double hGap = 50;
     private double vGap = 50;
     private double c = 20;
-    private double center = getWidth()/2;
-    private double height = getHeight()/8;
+    private double center = 480;
+    private double height = 40;
     public String message;
 
     SplayTreePane(SplayTree tree) {

@@ -222,6 +222,19 @@ public class SplayTree<T extends Comparable<T>> implements Set {
                 next = next.parent;
             }
         }
+        @Override
+        public void remove() {
+        if (next == null) return;
+        if(next.right!=null) {
+            next.right.parent = next.parent;
+            if(next.parent.left == next) next.parent.left = next.right;
+            else next.parent.right = next.right;
+        } else {
+            if(next.parent.left == next) next.parent.left = null;
+            else next.parent.right = null;
+        }
+        size--;
+        }
     }
 
     @Override

@@ -11,6 +11,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
+import java.awt.*;
+
 public class SplayTreePane extends Pane {
     private SplayTree<Integer> tree;
     private int radius = 20;
@@ -24,6 +26,7 @@ public class SplayTreePane extends Pane {
     }
 
     public void historyBar(String message) {
+        TextArea textrArea = new TextArea();
         getChildren().add(new Text(20, 20, message));
     }
 

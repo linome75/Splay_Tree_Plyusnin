@@ -7,25 +7,31 @@ import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+    SplayTree<Integer> tree = new SplayTree<>();
+    SplayTree<Integer> lastTree = new SplayTree<>();
 
     @Override
     public void start(Stage stage) {
-        SplayTree<Integer> tree = new SplayTree<>();
         BorderPane pane = new BorderPane();
+        SplitPane splitPane = new SplitPane();
         SplayTreePane treePane = new SplayTreePane(tree);
-        pane.setCenter(treePane);
+        SplayTreePane lastTreePane = new SplayTreePane(tree);
+        splitPane.getItems().addAll(lastTreePane, treePane);
+        pane.setCenter(splitPane);
+
         TextField textField = new TextField();
         textField.setPrefColumnCount(20);
         Button addBtn = new Button("Add");
         Button removeBtn = new Button("Remove");
         Button splayBtn = new Button("Splay");
-        controls(textField, addBtn, removeBtn, splayBtn, tree, treePane);
+        controls(textField, addBtn, removeBtn, splayBtn, tree, treePane, lastTreePane);
         FlowPane root = new FlowPane(Orientation.HORIZONTAL, 5, 5, new Label("Enter a value:"), textField, addBtn, removeBtn, splayBtn);
         root.setPadding(new Insets(10));
         root.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -38,12 +44,13 @@ public class Main extends Application {
         stage.show();
     }
 
-    public static void controls(TextField textField, Button add, Button remove, Button splay, SplayTree tree, SplayTreePane pane) {
+    public static void controls(TextField textField, Button add, Button remove, Button splay, SplayTree tree, SplayTreePane pane, SplayTreePane lastTreePane) {
         add.setOnAction(event -> {
             if (textField.getText().length() != 0) {
                 int key = Integer.parseInt(textField.getText());
                 if (tree.contains(key)) pane.historyBar(key + " is already in tree");
                 else {
+                    lastTreePane.displayTree();
                     pane.historyBar(key + " added");
                     tree.add(key);
                 }
@@ -57,6 +64,7 @@ public class Main extends Application {
                 int key = Integer.parseInt(textField.getText());
                 if (!tree.contains(key)) pane.historyBar(key + " isn't in tree");
                 else {
+                    lastTreePane.displayTree();
                     tree.remove(key);
                     pane.historyBar(key + " removed");
                 }
@@ -68,6 +76,7 @@ public class Main extends Application {
         splay.setOnAction(event -> {
             if (textField.getText().length() != 0) {
                 int key = Integer.parseInt(textField.getText());
+                lastTreePane.displayTree();
                 tree.find(key);
                 pane.displayTree();
                 textField.clear();

@@ -35,24 +35,9 @@ public class Main extends Application {
         Button splayBtn = new Button("Splay");
         Button cleanBtn = new Button("Clean");
         Button addAllBtn = new Button("Add all");
-        Button smaller = new Button("-");
-        Button bigger = new Button("+");
-        Button center = new Button("Center");
-        center.setOnAction(event -> {
-            treePane.displayTree();
-            lastTreePane.displayTree();
-        });
-        smaller.setOnAction(event -> {
-            treePane.smaller();
-            lastTreePane.smaller();
-        });
-        bigger.setOnAction(event -> {
-            treePane.bigger();
-            lastTreePane.bigger();
-        });
         Scene scene = new Scene(pane, 960, 540);
-        controls(scene,textField, addBtn, removeBtn, splayBtn, cleanBtn, addAllBtn, tree, treePane, lastTreePane);
-        FlowPane root = new FlowPane(Orientation.HORIZONTAL, 5, 5, new Label("Enter a value:"), textField, addBtn, removeBtn, splayBtn, cleanBtn, addAllBtn, smaller, bigger, center);
+        controls(scene, textField, addBtn, removeBtn, splayBtn, cleanBtn, addAllBtn, tree, treePane, lastTreePane);
+        FlowPane root = new FlowPane(Orientation.HORIZONTAL, 5, 5, new Label("Enter a value:"), textField, addBtn, removeBtn, splayBtn, cleanBtn, addAllBtn);
         root.setPadding(new Insets(10));
         root.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
         root.maxHeight(40);
@@ -67,26 +52,31 @@ public class Main extends Application {
     public static void controls(Scene scene, TextField textField, Button add, Button remove, Button splay, Button clean, Button addAll, SplayTree tree, SplayTreePane pane, SplayTreePane lastTreePane) {
         add.setOnAction(event -> {
             if (textField.getText().length() != 0) {
-                int key = Integer.parseInt(textField.getText());
-                if (tree.contains(key)) {
+                Integer key = tryParse(textField.getText());
+                if (key == null) pane.message = "Wrong data";
+                else if (tree.contains(key)) {
                     pane.message = key + " is already in tree";
-                    pane.displayTree();
-                    textField.clear();
                 } else {
                     lastTreePane.message = pane.message;
                     lastTreePane.displayTree();
                     tree.add(key);
                     pane.message = key + " added";
-                    pane.displayTree();
-                    textField.clear();
                 }
-
+                pane.displayTree();
+                textField.clear();
             }
         });
         addAll.setOnAction(event -> {
             String[] arr = textField.getText().split(" ");
             ArrayList<Integer> list = new ArrayList<>();
             for (String s : arr) {
+                Integer key = tryParse(s);
+                if (key == null) {
+                    pane.message = "Wrong data";
+                    pane.displayTree();
+                    textField.clear();
+                    return;
+                }
                 list.add(Integer.parseInt(s));
             }
             pane.message = Arrays.asList(arr) + " added";
@@ -96,29 +86,33 @@ public class Main extends Application {
         });
         remove.setOnAction(event -> {
             if (textField.getText().length() != 0) {
-                int key = Integer.parseInt(textField.getText());
-                if (!tree.contains(key) && !tree.isEmpty()) {
+                Integer key = tryParse(textField.getText());
+                if (key == null) pane.message = "Wrong data";
+                else if (!tree.contains(key) && !tree.isEmpty()) {
                     pane.message = key + " isn't in tree";
-                    pane.displayTree();
-                    textField.clear();
+
                 } else {
                     lastTreePane.message = pane.message;
                     lastTreePane.displayTree();
                     tree.remove(key);
                     pane.message = key + " removed";
-                    pane.displayTree();
-                    textField.clear();
+
                 }
+                pane.displayTree();
+                textField.clear();
             }
         });
 
         splay.setOnAction(event -> {
             if (textField.getText().length() != 0) {
-                int key = Integer.parseInt(textField.getText());
-                lastTreePane.message = pane.message;
-                lastTreePane.displayTree();
-                tree.find(key);
-                pane.message = key + " splayed";
+                Integer key = tryParse(textField.getText());
+                if (key == null) pane.message = "Wrong data";
+                else {
+                    lastTreePane.message = pane.message;
+                    lastTreePane.displayTree();
+                    tree.find(key);
+                    pane.message = key + " splayed";
+                }
                 pane.displayTree();
                 textField.clear();
             }
@@ -150,8 +144,24 @@ public class Main extends Application {
                     lastTreePane.downer();
                     pane.downer();
                 }
+                case ('E') -> {
+                    lastTreePane.bigger();
+                    pane.bigger();
+                }
+                case ('Q') -> {
+                    lastTreePane.smaller();
+                    pane.smaller();
+                }
             }
         });
+    }
+
+    public static Integer tryParse(String text) {
+        try {
+            return Integer.parseInt(text);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     public static void main(String[] args) {

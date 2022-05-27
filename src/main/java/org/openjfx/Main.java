@@ -18,7 +18,6 @@ import java.util.Arrays;
 
 public class Main extends Application {
     SplayTree<Integer> tree = new SplayTree<>();
-
     @Override
     public void start(Stage stage) {
         BorderPane pane = new BorderPane();
@@ -145,7 +144,6 @@ public class Main extends Application {
                     pane.downer();
                 }
                 case ('E') -> {
-                    lastTreePane.bigger();
                     pane.bigger();
                 }
                 case ('Q') -> {

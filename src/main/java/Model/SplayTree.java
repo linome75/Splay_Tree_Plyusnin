@@ -38,7 +38,8 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         setParent(parent.left, parent);
         setParent(parent.right, parent);
     }
-
+    // Трудоемкость
+    // Ресурсоемкость
     private void zig(Node<T> child, Node<T> parent) {
         if (parent.parent != null) {
             if (parent.parent.left == parent)
@@ -104,6 +105,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
     }
 
     private boolean contains(Node<T> node, T value) {
+        if (node == null) return true;
         if (node.value == null) return false;
         int comparison = value.compareTo(node.value);
         if (comparison == 0) return true;
@@ -271,11 +273,17 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         T value = (T) o;
         if (!contains(value)) return false;
         find(value);
-        setParent(root.left, null);
-        setParent(root.right, null);
-        size--;
-        merge(root.left, root.right);
-        return true;
+        if (size > 1) {
+            setParent(root.left, null);
+            setParent(root.right, null);
+            size--;
+            merge(root.left, root.right);
+            return true;
+        } else {
+            root.value = null;
+            size = 0;
+            return true;
+        }
     }
 
     @Override
@@ -286,12 +294,14 @@ public class SplayTree<T extends Comparable<T>> implements Set {
 
     @Override
     public void clear() {
-        while (!isEmpty()) {
+        while (size > 1) {
             setParent(root.left, null);
             setParent(root.right, null);
             size--;
             merge(root.left, root.right);
         }
+        root.value = null;
+        size = 0;
     }
 
     @Override

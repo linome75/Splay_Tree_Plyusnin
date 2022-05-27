@@ -19,3 +19,17 @@ javafx {
     version = "18.0.1"
     modules = ['javafx.controls']
 }
+
+jar {
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    manifest {
+        attributes(
+                'Implementation-Title': 'Splay_Tree_Jar',
+                "Main-Class": "org.openjfx.Main"
+        )
+    }
+    destinationDirectory = file("$rootDir/my-jar")
+    archivesBaseName = 'app'
+}

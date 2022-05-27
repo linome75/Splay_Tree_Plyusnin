@@ -15,11 +15,9 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Main extends Application {
     SplayTree<Integer> tree = new SplayTree<>();
-    SplayTree<Integer> lastTree = new SplayTree<>();
 
     @Override
     public void start(Stage stage) {
@@ -70,7 +68,7 @@ public class Main extends Application {
         add.setOnAction(event -> {
             if (textField.getText().length() != 0) {
                 int key = Integer.parseInt(textField.getText());
-                if (tree.contains(key) && !tree.isEmpty()) {
+                if (tree.contains(key)) {
                     pane.message = key + " is already in tree";
                     pane.displayTree();
                     textField.clear();
@@ -88,8 +86,8 @@ public class Main extends Application {
         addAll.setOnAction(event -> {
             String[] arr = textField.getText().split(" ");
             ArrayList<Integer> list = new ArrayList<>();
-            for (int i = 0; i<arr.length; i++) {
-                list.add(Integer.parseInt(arr[i]));
+            for (String s : arr) {
+                list.add(Integer.parseInt(s));
             }
             pane.message = Arrays.asList(arr) + " added";
             tree.addAll(list);
@@ -135,23 +133,23 @@ public class Main extends Application {
         });
         scene.setOnKeyPressed(event -> {
             char key = event.getText().toUpperCase().charAt(0);
-            switch (key){
-                case ('D') :
+            switch (key) {
+                case ('D') -> {
                     lastTreePane.left();
                     pane.left();
-                    break;
-                case ('A') :
+                }
+                case ('A') -> {
                     lastTreePane.right();
                     pane.right();
-                    break;
-                case ('W') :
+                }
+                case ('W') -> {
                     lastTreePane.upper();
                     pane.upper();
-                    break;
-                case ('S') :
+                }
+                case ('S') -> {
                     lastTreePane.downer();
                     pane.downer();
-                    break;
+                }
             }
         });
     }

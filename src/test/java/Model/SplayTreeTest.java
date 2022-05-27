@@ -47,7 +47,7 @@ class SplayTreeTest {
         tree.remove(8);
         tree.remove(3);
         tree.remove(4);
-        assertFalse(tree.isEmpty());
+        assertTrue(tree.isEmpty());
     }
 
     @Test
@@ -82,8 +82,8 @@ class SplayTreeTest {
     @Test
     void toArray() {
         SplayTree<Integer> tree = new SplayTree<>();
-        Object[] arr = {10, 7, 5, 4, 3, 8};
-        Object[] arr1 = {10, 7, 5, 4, 3, 8, null};
+        Object[] arr = {10, 8, 7, 5, 4, 3};
+        Object[] arr1 = {10, 8, 7, 5, 4, 3, null};
         tree.add(8);
         tree.add(3);
         tree.add(4);

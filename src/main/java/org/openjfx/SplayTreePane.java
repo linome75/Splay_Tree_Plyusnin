@@ -11,8 +11,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
-import java.awt.*;
-
 public class SplayTreePane extends Pane {
     private SplayTree<Integer> tree;
     private double radius = 20;

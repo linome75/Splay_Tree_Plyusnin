@@ -39,6 +39,13 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         setParent(parent.right, parent);
     }
 
+    // Простая смена child на parent
+    //           y                                       x
+    //          / \      Zig (Правый разворот)          /  \
+    //         x   T3   – - – - – - – - - ->           T1   y
+    //             / \       < - - - - - - - - -           / \
+    //            T1  T2     Zag (Левый разворот)        T2   T3
+
     private void zig(Node<T> child, Node<T> parent) {
         if (parent.parent != null) {
             if (parent.parent.left == parent)
@@ -57,17 +64,57 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         keepParent(parent);
     }
 
+    // Смена если ребенок, родитель и дедушка выстроились в одну линию
+    // Сначала родитель и дедушка меняются местами, затем ребенок и родитель
+    //    Zig-Zig (Левый-левый случай):
+    //          G                        P                           C
+    //         / \                     /   \                        / \
+    //        P  T4   zig(P, G)       C     G     zig(C, P)        T1   P
+    //       / \      ============>  / \   / \    ============>        / \
+    //      C  T3                   T1 T2 T3 T4                       T2  G
+    //     / \                                                           / \
+    //    T1 T2                                                         T3  T4
+    //
+    //    Zag-Zag (Правый-правый случай):
+    //          G                          P                           C
+    //         /  \                      /   \                        / \
+    //        T1   P     zig(P, G)      G     C         zig(C, P)    P   T4
+    //            / \    ============> / \   / \    ============>   / \
+    //          T2   C               T1 T2 T3 T4                  G   T3
+    //              / \                                          / \
+    //             T3 T4                                        T1  T2
     private void zigZig(Node<T> child, Node<T> parent) {
         zig(parent, parent.parent);
         zig(child, parent);
     }
 
+    // Смена, если ребенок и родитель по разные стороны от своих родителей
+    // Сначала родитель и ребенок меняются местами, затем ребенок и дедушка
+    //        Zag-Zig (Левый-правый случай):
+    //           G                        G                           C
+    //          / \                     /   \                       /   \
+    //          P   T4     zig(C, P)   C     T4    zig(C, G)       P     G
+    //         /  \      ==========>  / \        ============>   / \   /  \
+    //        T1   C                 P  T3                     T1  T2 T3  T4
+    //          / \                 / \
+    //        T2  T3              T1   T2
+    //
+    //        Zig-Zag (Правый-левый случай):
+    //          G                          G                           C
+    //         /  \                      /  \                        /   \
+    //        T1   P    zig(C, P)       T1   C     zig(C, G)        G      P
+    //            / \   =============>      / \    ============>   / \    / \
+    //           C  T4                     T2   P                 T1  T2 T3  T4
+    //          / \                            / \
+    //        T2  T3                         T3  T4
     private void zigZag(Node<T> child, Node<T> parent) {
         zig(child, parent);
         zig(child, child.parent);
     }
+
+    // Вытягивание нужного узла в корень
     // Трудоемкость O(logN)
-    // Ресурсоемкость O(1)
+    // Ресурсоемкость O(N)
     private boolean splay(Node<T> node) {
         if (node.parent == null) {
             root = node;
@@ -92,6 +139,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         find(root, value);
     }
 
+    // Поиск по двоичному дереву с последующим вытягиванием близжайшего по значению узла
     private boolean find(Node<T> node, T value) {
         if (node.value == null) return false;
         int comparison = value.compareTo(node.value);
@@ -104,6 +152,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         return splay(node);
     }
 
+    // Поиск по двоичному дереву
     private boolean contains(Node<T> node, T value) {
         if (node == null) return true;
         if (node.value == null) return false;
@@ -116,6 +165,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         return false;
     }
 
+    // Поиск с последующим вытягиванием близжайшей к значению вершины и разделением дерева
     private Node<T> split(Node<T> node, T value) {
         if (node == null) return null;
         find(node, value);
@@ -139,6 +189,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         }
     }
 
+    // Вставка
     private boolean insert(Node<T> node, T value) {
         if (root.value == null) {
             root.value = value;
@@ -150,6 +201,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         return true;
     }
 
+    // Объединение поддеревьев: вытягивание наименьшего значения из правого дерева и установка его в корень
     private void merge(Node<T> left, Node<T> right) {
         if (right == null) {
             root = left;
@@ -222,23 +274,33 @@ public class SplayTree<T extends Comparable<T>> implements Set {
                 next = next.parent;
             }
         }
+
         @Override
         public void remove() {
-        if (next == null) return;
-        if(next.right!=null) {
-            next.right.parent = next.parent;
-            if(next.parent.left == next) next.parent.left = next.right;
-            else next.parent.right = next.right;
-        } else {
-            if(next.parent.left == next) next.parent.left = null;
-            else next.parent.right = null;
-        }
-        size--;
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            } else {
+                if (next.right != null) {
+                    next.right.parent = next.parent;
+                    if (next.parent != null)
+                        if (next.parent.left == next) next.parent.left = next.right;
+                        else next.parent.right = next.right;
+
+                    next = next.right;
+                } else {
+                    if (next.parent != null)
+                        if (next.parent.left == next) next.parent.left = null;
+                        else next.parent.right = null;
+                    next = next.parent;
+                }
+                size--;
+            }
         }
     }
 
     @Override
     public Object[] toArray() {
+        if (size == 0) throw new NoSuchElementException();
         Object[] a = new Object[size];
         deepTraversal(root, a, 0);
         return a;
@@ -251,6 +313,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         return a;
     }
 
+    // Проверка длины массива, если слишком короткий, создание нового, если длиный, установка null флага конца
     final Object[] prepareArray(Object[] a) {
         if (a == null) throw new NullPointerException();
         int size = this.size;
@@ -263,8 +326,9 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         return a;
     }
 
+    // Обход в глубину с выводом значений в массив
     private void deepTraversal(Node<T> node, Object[] a, int i) {
-        if (node == null) return;
+        if (node == null || i == a.length) return;
         a[i] = node.value;
         i++;
         deepTraversal(node.left, a, i);

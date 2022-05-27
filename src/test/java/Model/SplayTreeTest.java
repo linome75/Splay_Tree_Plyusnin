@@ -198,5 +198,10 @@ class SplayTreeTest {
         it.remove();
         assertTrue(i - 1 == tree.size());
         assertArrayEquals(arr, tree.toArray());
+        while (it.hasNext()) {
+            System.out.println(Arrays.asList(tree.toArray()));
+            it.remove();
+        }
+
     }
 }

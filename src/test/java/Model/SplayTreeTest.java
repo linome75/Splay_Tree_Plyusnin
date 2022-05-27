@@ -102,6 +102,12 @@ class SplayTreeTest {
     @Test
     void add() {
         SplayTree<Integer> tree = new SplayTree<>();
+        tree.add(1);
+        tree.add(23);
+        tree.add(5);
+        System.out.println(tree.getRoot().value);
+        System.out.println(tree.getRoot().left.value);
+        System.out.println(tree.getRoot().right.value);
         assertTrue(tree.add(1));
         assertTrue(tree.contains(1));
         assertTrue(tree.add(1));

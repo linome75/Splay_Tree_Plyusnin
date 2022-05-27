@@ -4,9 +4,11 @@ package Model;
 import java.util.*;
 
 public class SplayTree<T extends Comparable<T>> implements Set {
-    private static class Node<T> {
-        T value;
-        Node<T> left, right, parent;
+    public static class Node<T> {
+        public T value;
+        public Node<T> left;
+        public Node<T> right;
+        Node<T> parent;
 
         Node(T value, Node<T> left, Node<T> right, Node<T> parent) {
             this.value = value;
@@ -20,6 +22,9 @@ public class SplayTree<T extends Comparable<T>> implements Set {
 
     private int size = 0;
 
+    public Node<T> getRoot() {
+        return root;
+    }
 
     public SplayTree() {
         root = new Node<>(null, null, null, null);
@@ -35,11 +40,10 @@ public class SplayTree<T extends Comparable<T>> implements Set {
     }
 
     private void zig(Node<T> child, Node<T> parent) {
-        Node<T> grandparent = parent.parent;
-        if (grandparent != null) {
-            if (grandparent.left == parent)
-                grandparent.left = child;
-            else grandparent.right = child;
+        if (parent.parent != null) {
+            if (parent.parent.left == parent)
+                parent.parent.left = child;
+            else parent.parent.right = child;
         }
         if (parent.left == child) {
             parent.left = child.right;
@@ -48,7 +52,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
             parent.right = child.left;
             child.left = parent;
         }
-        child.parent = grandparent;
+        child.parent = parent.parent;
         keepParent(child);
         keepParent(parent);
     }
@@ -83,7 +87,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         return splay(node);
     }
 
-    private void find(T value) {
+    public void find(T value) {
         find(root, value);
     }
 
@@ -129,7 +133,7 @@ public class SplayTree<T extends Comparable<T>> implements Set {
             Node<T> leftNode = node.left;
             setParent(leftNode, null);
             node.left = null;
-            return new Node<>(value, node, leftNode, null);
+            return new Node<>(value, leftNode, node, null);
         }
     }
 
@@ -159,26 +163,6 @@ public class SplayTree<T extends Comparable<T>> implements Set {
         left.parent = right;
     }
 
-//    public void getTree() {
-//        getTree(root);
-//    }
-//
-//    private void getTree(Node<T> node) {
-//        if (node == null) {
-//            System.out.println("null");
-//            return;
-//        }
-//        System.out.println(node.value);
-//        if (node.left != null) {
-//            System.out.println("left[");
-//            getTree(node.left);
-//        }
-//        if (node.right != null) {
-//            System.out.println("right[");
-//            getTree(node.right);
-//        }
-//        System.out.println("]");
-//    }
 
     @Override
     public int size() {

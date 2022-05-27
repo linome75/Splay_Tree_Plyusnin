@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="MainApp">
+    <output-path>$PROJECT_DIR$/src/main/java/org/openjfx</output-path>
+    <root id="root" />
+  </artifact>
+</component>

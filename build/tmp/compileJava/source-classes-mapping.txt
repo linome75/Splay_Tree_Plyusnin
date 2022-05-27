@@ -1,8 +1,8 @@
-org/openjfx/Tree.java
- org.openjfx.Tree
-org/openjfx/MainApp.java
- org.openjfx.MainApp
 Model/SplayTree.java
  Model.SplayTree
  Model.SplayTree$Node
  Model.SplayTree$SplayTreeIterator
+org/openjfx/SplayTreePane.java
+ org.openjfx.SplayTreePane
+org/openjfx/Main.java
+ org.openjfx.Main
